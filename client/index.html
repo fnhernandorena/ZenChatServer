@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="module">
+        import {io} from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
+
+        const socket = io()
+
+        const form = document.getElementById('form')
+        const message = document.getElementById('message')
+        const messagesList = document.getElementById('messages_list')
+
+        socket.on('chat message', (msg) => {
+            const li = document.createElement('li')
+            li.textContent = msg
+            messagesList.appendChild(li)
+        })
+
+        form.addEventListener('submit', (e)=>{
+            e.preventDefault()
+            const msg = message.value
+            if(msg){
+                socket.emit('chat message', msg)
+                message.value = ''
+            }
+        })
+    </script>
+    <style>
+        :root{
+            color-scheme: ligth dark;
+        }
+    </style>
+</head>
+<body>
+    <h1>ZenChat</h1>
+    <section id="chat">
+        <ul id="messages_list"></ul>
+        <form id="form">
+            <input type="text" id="message" name="message" placeholder="Type your message..." autocomplete="off">
+            <button type="submit">Send</button>
+        </form>
+    </section>
+</body>
+</html>
