@@ -7,8 +7,15 @@
     <script type="module">
         import {io} from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js'
 
+        const getUserName = async () => {
+            let name = prompt('Enter your username');
+            console.log(name);
+            return name
+        }
+
         const socket = io({
             auth:{
+                userName: await getUserName(),
                 serverOffset: 0
             }
         })
@@ -17,8 +24,8 @@
         const message = document.getElementById('message')
         const messagesList = document.getElementById('messages_list')
 
-        socket.on('chat message', (msg, serverOffset) => {
-            const item = `<li>${msg}</li>`
+        socket.on('chat message', (msg, serverOffset, userName) => {
+            const item = `<li><p>${msg}</p><small>${userName}</small></li>`
             messagesList.insertAdjacentHTML('beforeend', item)
             socket.auth.serverOffset = serverOffset
         })
